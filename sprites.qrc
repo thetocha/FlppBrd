@@ -1,0 +1,8 @@
+<RCC>
+    <qresource prefix="/new/prefix1">
+        <file>2346_Flappy_Bird_res/bg1.png</file>
+        <file>2346_Flappy_Bird_res/spr_block_lower.png</file>
+        <file>2346_Flappy_Bird_res/spr_block_upper.png</file>
+        <file>2346_Flappy_Bird_res/bckg1.png</file>
+    </qresource>
+</RCC>

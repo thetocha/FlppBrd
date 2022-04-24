@@ -3,13 +3,13 @@
 
 #include <QRect>
 #include <QPainter>
-#include <QBrush>
+#include <QImage>>
 
 class Pipe
 {
 public:
     Pipe(QPoint gap_center);
-    void drawPipe(QPainter *painter,QBrush brush,  QBrush brush_u);
+    void drawPipe(QPainter *painter,QImage image_l,  QImage image_u);
 
 public:
     QRect heigher;

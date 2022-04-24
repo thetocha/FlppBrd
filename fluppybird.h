@@ -14,14 +14,17 @@ class FluppyBird : public QMainWindow
 public:
     FluppyBird(QWidget *parent = nullptr);
     void paintEvent(QPaintEvent *event);
+    void keyPressEvent(QKeyEvent *event);
     ~FluppyBird();
 
 public slots:
-    void movePipes();
+    void moveObjects();
 
 private:
     Ui::FluppyBird *ui;
     std::vector<QPoint> points;
-    const int speed = -4;
+    QPoint bird_center;
+    const int pipe_speed = -4;
+    int bird_speed = 0;
 };
 #endif // FLUPPYBIRD_H
