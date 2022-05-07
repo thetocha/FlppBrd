@@ -3,6 +3,19 @@
 
 #include <QMainWindow>
 
+#include "pipe.h"
+#include "bird.h"
+
+#include <vector>
+#include <QPoint>
+#include <random>
+#include <QPainter>
+#include <QBrush>
+#include <QRect>
+#include <QTimer>
+#include <QImage>
+#include <QKeyEvent>
+
 QT_BEGIN_NAMESPACE
 namespace Ui { class FluppyBird; }
 QT_END_NAMESPACE
@@ -15,6 +28,8 @@ public:
     FluppyBird(QWidget *parent = nullptr);
     void paintEvent(QPaintEvent *event);
     void keyPressEvent(QKeyEvent *event);
+    bool Intersections();
+//    void StopGame();
     ~FluppyBird();
 
 public slots:
@@ -24,7 +39,7 @@ private:
     Ui::FluppyBird *ui;
     std::vector<QPoint> points;
     QPoint bird_center;
-    const int pipe_speed = -4;
+    int pipe_speed = -4;
     int bird_speed = 0;
 };
 #endif // FLUPPYBIRD_H

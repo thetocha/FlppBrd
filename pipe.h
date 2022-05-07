@@ -3,8 +3,7 @@
 
 #include <QRect>
 #include <QPainter>
-#include <QImage>>
-
+#include <QImage>
 class Pipe
 {
 public:

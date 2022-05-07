@@ -10,7 +10,7 @@ class Bird
 {
 public:
     Bird(QPoint center);
-    void drawBird(QPainter *painter, QBrush brush);
+    void drawBird(QPainter *painter, QImage image);
 public:
     QPoint center;
     const int radius = 30;
