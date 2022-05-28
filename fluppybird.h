@@ -28,18 +28,32 @@ public:
     FluppyBird(QWidget *parent = nullptr);
     void paintEvent(QPaintEvent *event);
     void keyPressEvent(QKeyEvent *event);
-    bool Intersections();
-//    void StopGame();
+    bool Intersections(int number);
+    void IncreaseCounter();
+    void StopTheGame();
     ~FluppyBird();
 
 public slots:
     void moveObjects();
+    void StartTheGame();
+    void RestartTheGame();
+    void OpenSettings();
+    void CloseSettings();
+    void BirdDefault();
+    void PipeDefault();
+    void BirdChange();
+    void PipeChange();
 
 private:
     Ui::FluppyBird *ui;
-    std::vector<QPoint> points;
+    QTimer* main_timer = new QTimer(this);
+    QTimer* starting_timer = new QTimer(this);
+    Pipe* Pipes[3];
+    Bird bird = Bird(300,400);
     QPoint bird_center;
-    int pipe_speed = -4;
-    int bird_speed = 0;
+    bool isDead;
+    int pipe_speed;
+    int bird_speed;
+    int counter;
 };
 #endif // FLUPPYBIRD_H

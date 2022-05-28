@@ -9,8 +9,12 @@
 class Bird
 {
 public:
-    Bird(QPoint center);
+    Bird(int x, int y);
     void drawBird(QPainter *painter, QImage image);
+    int x();
+    int y();
+    void setX(int newX);
+    void setY(int newY);
 public:
     QPoint center;
     const int radius = 30;

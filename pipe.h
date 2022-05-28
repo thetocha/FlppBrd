@@ -8,6 +8,11 @@ class Pipe
 {
 public:
     Pipe(QPoint gap_center);
+    Pipe(int x, int y);
+    int x();
+    int y();
+    void setX(int newX);
+    void setY(int newY);
     void drawPipe(QPainter *painter,QImage image_l,  QImage image_u);
 
 public:
