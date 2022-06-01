@@ -15,6 +15,7 @@
 #include <QTimer>
 #include <QImage>
 #include <QKeyEvent>
+#include <QFileDialog>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class FluppyBird; }
@@ -30,6 +31,7 @@ public:
     void keyPressEvent(QKeyEvent *event);
     bool Intersections(int number);
     void IncreaseCounter();
+    void ChageScoringArea(int pipe_speed);
     void StopTheGame();
     ~FluppyBird();
 
@@ -41,8 +43,12 @@ public slots:
     void CloseSettings();
     void BirdDefault();
     void PipeDefault();
-    void BirdChange();
+    void ChangeBack();
+    void ChageLow();
+    void ChageHigh();
     void PipeChange();
+    void ChangeSprites();
+    void BackToSettings();
 
 private:
     Ui::FluppyBird *ui;
@@ -51,9 +57,16 @@ private:
     Pipe* Pipes[3];
     Bird bird = Bird(300,400);
     QPoint bird_center;
+    QString back_path;
+    QString low_path;
+    QString upp_path;
     bool isDead;
+    int default_pipe_speed;
     int pipe_speed;
     int bird_speed;
+    int gravity;
+    int jump;
+    int scoring_area;
     int counter;
 };
 #endif // FLUPPYBIRD_H

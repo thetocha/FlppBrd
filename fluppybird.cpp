@@ -4,9 +4,16 @@
 FluppyBird::FluppyBird(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::FluppyBird)
+    , back_path(":/new/prefix1/2346_Flappy_Bird_res/bckg1.png")
+    , low_path(":/new/prefix1/2346_Flappy_Bird_res/spr_block_low.png")
+    , upp_path(":/new/prefix1/2346_Flappy_Bird_res/spr_block_upp.png")
     , isDead(false)
-    , pipe_speed(-4)
+    , default_pipe_speed(-4)
+    , pipe_speed(default_pipe_speed)
     , bird_speed(0)
+    , gravity(2)
+    , jump(-10)
+    , scoring_area(3)
     , counter(0)
 
 
@@ -28,30 +35,34 @@ FluppyBird::FluppyBird(QWidget *parent)
         distance += 400;
     }
 
+
     connect(main_timer, SIGNAL(timeout()), SLOT(moveObjects()));
+
     connect(ui->StartButtom, SIGNAL(clicked()), SLOT(StartTheGame()));
     connect(ui->RestartButtom, SIGNAL(clicked()), SLOT(RestartTheGame()));
     connect(ui->SettingspushButton, SIGNAL(clicked()), SLOT(OpenSettings()));
     connect(ui->CloseButton, SIGNAL(clicked()), SLOT(CloseSettings()));
     connect(ui->birdDefaultButton, SIGNAL(clicked()), SLOT(BirdDefault()));
     connect(ui->pipeDefaultButton, SIGNAL(clicked()), SLOT(PipeDefault()));
-    connect(ui->BirdspinBox, SIGNAL(valueChanged(int)), SLOT(BirdChange()));
     connect(ui->PipespinBox, SIGNAL(valueChanged(int)), SLOT(PipeChange()));
+    connect(ui->sprites, SIGNAL(clicked()), SLOT(ChangeSprites()));
+    connect(ui->ChangeHP, SIGNAL(clicked()), SLOT(ChageHigh()));
+    connect(ui->changeLP, SIGNAL(clicked()), SLOT(ChageLow()));
+    connect(ui->backToSettings, SIGNAL(clicked()), SLOT (BackToSettings()));
+    connect(ui->changeBCK,SIGNAL(clicked()), SLOT(ChangeBack()));
 
 
 
-    ui->BirdspinBox->setValue(0);
     ui->PipespinBox->setValue(20);
-    ui->BirdspinBox->setSuffix("%");
     ui->PipespinBox->setSuffix("%");
-    ui->BirdspinBox->setMinimum(0);
-    ui->BirdspinBox->setMaximum(100);
     ui->PipespinBox->setMinimum(5);
     ui->PipespinBox->setMaximum(100);
     ui->PipespinBox->setSingleStep(5);
 
+    ui->spritesBox->hide();
     ui->RestartButtom->hide();
     ui->SettinggroupBox->hide();
+    ui->EarthRadioButton->setChecked(true);
 
 }
 
@@ -59,8 +70,28 @@ FluppyBird::FluppyBird(QWidget *parent)
 
 void FluppyBird::StartTheGame()
 {
+    if(ui->EarthRadioButton->isChecked())
+    {
+        gravity = 2;
+        jump = -10;
+    }
+    else if(ui->MoonRadioButton->isChecked())
+    {
+        gravity = 1;
+        jump = -30;
+    }
+    else if(ui->SaturnRadioButton->isChecked())
+    {
+        gravity = 15;
+        jump = -1;
+    }
+
+
+    counter = 0;
+    pipe_speed = (default_pipe_speed*ui->PipespinBox->value())/20;
     ui->StartButtom->hide();
     ui->SettingspushButton->hide();
+
     main_timer->start(25);
 }
 
@@ -81,28 +112,48 @@ void FluppyBird::CloseSettings()
 
 void FluppyBird::BirdDefault()
 {
-    bird_speed = 0;
-    ui->BirdspinBox->setValue(0);
+    ui->EarthRadioButton->setChecked(true);
 }
 
 void FluppyBird::PipeDefault()
 {
-    pipe_speed = -4;
+    pipe_speed = default_pipe_speed;
     ui->PipespinBox->setValue(20);
 }
 
-void FluppyBird::BirdChange()
-{
-    bird_speed = ui->BirdspinBox->value();
-}
 
 void FluppyBird::PipeChange()
 {
-    pipe_speed = (-4*ui->PipespinBox->value())/20;
+    pipe_speed = (default_pipe_speed * ui->PipespinBox->value())/20;
 }
 
 
+void FluppyBird::ChangeBack()
+{
+      back_path = QFileDialog::getOpenFileName(this, tr("Open Image"), "/D:/work", tr(" Image Files (*.png *.jpg *.bmp)"));
+}
 
+void FluppyBird::ChageLow()
+{
+      low_path = QFileDialog::getOpenFileName(this, tr("Open Image"), "/D:/work", tr(" Image Files (*.png *.jpg *.bmp)"));
+}
+
+void FluppyBird::ChageHigh()
+{
+      upp_path = QFileDialog::getOpenFileName(this, tr("Open Image"), "/D:/work", tr(" Image Files (*.png *.jpg *.bmp)"));
+}
+
+void FluppyBird::ChangeSprites()
+{
+    ui->SettinggroupBox->hide();
+    ui->spritesBox->show();
+}
+
+void  FluppyBird::BackToSettings()
+{
+    ui->SettinggroupBox->show();
+    ui->spritesBox->hide();
+}
 void FluppyBird::moveObjects()
 {
     ui->centralwidget->grabKeyboard();
@@ -122,10 +173,11 @@ void FluppyBird::moveObjects()
 
 
    this->bird.setY(this->bird.y() + bird_speed);
-   bird_speed += 2;
+   bird_speed += gravity;
 
-   IncreaseCounter();
+
    StopTheGame();
+   IncreaseCounter();
    this->update();
 }
 
@@ -134,11 +186,12 @@ void FluppyBird::moveObjects()
 
 void FluppyBird::paintEvent(QPaintEvent *event)
 {
+
       QPainter painter(this);
-      QImage bckg(":/new/prefix1/2346_Flappy_Bird_res/bckg1.png", "PNG");
+      QImage bckg(back_path, "PNG");
       QBrush brushBack(bckg);
-      QImage lower_pipe(":/new/prefix1/2346_Flappy_Bird_res/spr_block_low.png","PNG");
-      QImage upper_pipe(":/new/prefix1/2346_Flappy_Bird_res/spr_block_upp.png", "PNG");
+      QImage lower_pipe(low_path,"PNG");
+      QImage upper_pipe(upp_path, "PNG");
 
 
       painter.fillRect(0,0,this->width(),this->height(),brushBack);
@@ -155,6 +208,7 @@ void FluppyBird::paintEvent(QPaintEvent *event)
 
       ui->LCDcounter->display(counter);
 
+
       if(isDead)
       {
           QFont font("Calibri", 20,QFont::DemiBold);
@@ -165,6 +219,7 @@ void FluppyBird::paintEvent(QPaintEvent *event)
           painter.drawText(300,300,score);
           QString sc = QString::number(counter);
           painter.drawText(470, 300, sc);
+
       }
 
 }
@@ -198,7 +253,7 @@ bool FluppyBird::Intersections(int number)
 void FluppyBird::IncreaseCounter()
 {
     for(int i = 0; i < 3; ++i){
-        if(bird.x() + 37 >= Pipes[i]->x() && bird.x() + 37 <= Pipes[i]->x() + 3 ){
+        if(bird.x() + 37 >= Pipes[i]->x() && bird.x() + 37 <= Pipes[i]->x() + scoring_area ){
             ++counter;
         }
     }
@@ -213,6 +268,7 @@ void FluppyBird::StopTheGame()
             pipe_speed = 0;
             ui->RestartButtom->show();
             isDead = true;
+            scoring_area = 0;
         }
     }
 }
@@ -239,7 +295,6 @@ void FluppyBird::RestartTheGame()
     bird.setY(400);
 
     main_timer->stop();
-    counter = 0;
     ui->RestartButtom->hide();
     ui->StartButtom->show();
     ui->SettingspushButton->show();
